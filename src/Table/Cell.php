@@ -1,5 +1,6 @@
 <?php
 
+namespace Dytechltd\CustomTable\Table;
 
 use Dytechltd\CustomTable\ToArrayInterface;
 
