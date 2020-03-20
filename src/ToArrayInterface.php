@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Dennis\CustomTable;
+namespace Dytechltd\CustomTable;
 
 
 interface ToArrayInterface

@@ -1,6 +1,6 @@
 <?php
 
-namespace Dennis\CustomTable;
+namespace Dytechltd\CustomTable;
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;

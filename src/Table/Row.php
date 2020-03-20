@@ -1,7 +1,7 @@
 <?php
 
 
-use Dennis\CustomTable\ToArrayInterface;
+use Dytechltd\CustomTable\ToArrayInterface;
 
 class Row implements ToArrayInterface
 {
