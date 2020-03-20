@@ -17,7 +17,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Dennis\\CustomTable\\CardServiceProvider"
+                "Dytechltd\\CustomTable\\CardServiceProvider"
             ]
         }
     },
