@@ -4,19 +4,20 @@
 
 Simple card table with data of you choice.
 
-It can be useful as latest order list or latest posts, ...
+It can be useful as latest order list or latest posts, users, ...
 
-![Nova Custom Table Card](https://raw.githubusercontent.com/m-a-k-o/nova-custom-table-card/master/screenshot.png)
+Empty table:
+![Nova Custom Empty Table Card](https://github.com/Dennis-Mwea/custom-nova-table-card/blob/master/EmptyTable.png)
 
- ## This docs are only for v. 2.*
- In version 2 added: refresh (reaload), possiblity to add id and classes to cells
+Table with data:
+![Nova Custom Table Card](https://github.com/Dennis-Mwea/custom-nova-table-card/blob/master/TableWithData.png)
 
  ## Installation
 
 You can install the package in to a Laravel app that uses [Nova](https://nova.laravel.com) via composer:
 
 ```bash
-composer require m-a-k-o/nova-custom-table-card
+composer require dytechltd/custom-table
 ```
 
 You must register the card with NovaServiceProvider.
@@ -31,7 +32,7 @@ public function cards()
         // ...
 
         // all the parameters are required excelpt title
-        new \Mako\CustomTableCard\CustomTableCard(
+        new \Dytechltd\CustomTable\CustomTable(
             array $header, array $data, string $title
         ),
     ];
@@ -48,19 +49,19 @@ public function cards()
         // ...
 
         // all the parameters are required
-        new \Mako\CustomTableCard\CustomTableCard(
+        new \Dytechltd\CustomTable\CustomTable(
             [
-                new \Mako\CustomTableCard\Table\Cell('Order Number'),
-                (new \Mako\CustomTableCard\Table\Cell('Price'))->class('text-right'),
+                new \Dytechltd\CustomTable\Table\Cell('Order Number'),
+                (new \Dytechltd\CustomTable\Table\Cell('Price'))->class('text-right'),
             ], // header
             [
-                (new \Mako\CustomTableCard\Table\Row(
-                    new \Mako\CustomTableCard\Table\Cell('2018091001'),
-                    (new \Mako\CustomTableCard\Table\Cell('20.50'))->class('text-right')->id('price-2')
+                (new \Dytechltd\CustomTable\Table\Row(
+                    new \Dytechltd\CustomTable\Table\Cell('2018091001'),
+                    (new \Dytechltd\CustomTable\Table\Cell('20.50'))->class('text-right')->id('price-2')
                 ))->viewLink('/resources/orders/1'),
-                (new \Mako\CustomTableCard\Table\Row(
-                    new \Mako\CustomTableCard\Table\Cell('2018091002'),
-                    (new \Mako\CustomTableCard\Table\Cell('201.25'))->class('text-right')->id('price-2')
+                (new \Dytechltd\CustomTable\Table\Row(
+                    new \Dytechltd\CustomTable\Table\Cell('2018091002'),
+                    (new \Dytechltd\CustomTable\Table\Cell('201.25'))->class('text-right')->id('price-2')
                 )),
             ], // data
             'Orders' //title
@@ -79,19 +80,19 @@ public function cards()
         // ...
 
         // all the parameters are required except title
-        (new \Mako\CustomTableCard\CustomTableCard)
+        (new \Dytechltd\CustomTable\CustomTableCard)
             ->header([
-                new \Mako\CustomTableCard\Table\Cell('Order Number'),
-                (new \Mako\CustomTableCard\Table\Cell('Price'))->class('text-right'),
+                new \Dytechltd\CustomTable\Table\Cell('Order Number'),
+                (new \Dytechltd\CustomTable\Table\Cell('Price'))->class('text-right'),
             ])
             ->data([
-                (new \Mako\CustomTableCard\Table\Row(
-                    new \Mako\CustomTableCard\Table\Cell('2018091001'),
-                    (new \Mako\CustomTableCard\Table\Cell('20.50'))->class('text-right')->id('price-2')
+                (new \Dytechltd\CustomTable\Table\Row(
+                    new \Dytechltd\CustomTable\Table\Cell('2018091001'),
+                    (new \Dytechltd\CustomTable\Table\Cell('20.50'))->class('text-right')->id('price-2')
                 ))->viewLink('/resources/orders/1'),
-                (new \Mako\CustomTableCard\Table\Row(
-                    new \Mako\CustomTableCard\Table\Cell('2018091002'),
-                    (new \Mako\CustomTableCard\Table\Cell('201.25'))->class('text-right')->id('price-2')
+                (new \Dytechltd\CustomTable\Table\Row(
+                    new \Dytechltd\CustomTable\Table\Cell('2018091002'),
+                    (new \Dytechltd\CustomTable\Table\Cell('201.25'))->class('text-right')->id('price-2')
                 )),
             ])
             ->title('Orders')
@@ -111,40 +112,32 @@ In this separate class you are able to fetch data from models in nice clean way.
 
 namespace App\Nova\Cards;
 
-use App\Models\Order;
+use App\Models\User;
 
-class LatestOrders extends \Mako\CustomTableCard\CustomTableCard
+class UnverifiedUsers extends \Dytechltd\CustomTable\CustomTableCard
 {
     public function __construct()
     {
-        $header = collect(['Date', 'Order Number', 'Status', 'Price', 'Name']);
+        $header = collect(['ID', 'NAME', 'EMAIL', 'PHONE NUMBER', 'INTRODUCER', 'VERIFIED', 'LAST LOGIN AT']);
+        
+        $this->title('Unverified Users');
+        $users = User::whereNull('email_verified_at')
+            ->get();
 
-        $this->title('Latest Orders');
-        $this->refresh(5); // If you need refresh your card data (in seconds)
-
-        // $orders = Order::all();
-        // Data from you model
-        $orders = collect([
-            ['date' => '2018-12-01', 'order_number' => '2018120101', 'status' => 'Ordered', 'price' => '20.55', 'name' => 'John Doe'],
-            ['date' => '2018-12-01', 'order_number' => '2018120101', 'status' => 'Ordered', 'price' => '20.55', 'name' => 'John Doe'],
-            ['date' => '2018-12-01', 'order_number' => '2018120101', 'status' => 'Ordered', 'price' => '20.55', 'name' => 'John Doe'],
-            ['date' => '2018-12-01', 'order_number' => '2018120101', 'status' => 'Ordered', 'price' => '20.55', 'name' => 'John Doe'],
-            ['date' => '2018-12-01', 'order_number' => '2018120101', 'status' => 'Ordered', 'price' => '20.55', 'name' => 'John Doe'],
-            ['date' => '2018-12-01', 'order_number' => '2018120101', 'status' => 'Ordered', 'price' => '20.55', 'name' => 'John Doe'],
-        ]);
-
-        $this->header($header->map(function($value) {
-            return new \Mako\CustomTableCard\Table\Cell($value);
+        $this->header($header->map(function ($value) {
+            return new Cell($value);
         })->toArray());
 
-        $this->data($orders->map(function($order) {
-            return new \Mako\CustomTableCard\Table\Row(
-                new \Mako\CustomTableCard\Table\Cell($order['date']),
-                new \Mako\CustomTableCard\Table\Cell($order['order_number']),
-                new \Mako\CustomTableCard\Table\Cell($order['status']),
-                new \Mako\CustomTableCard\Table\Cell($order['price']),
-                new \Mako\CustomTableCard\Table\Cell($order['name'])
-            );
+        $this->data(collect($users)->map(function ($user) {
+            return (new Row(
+                new Cell($user->id),
+                new Cell($user->name),
+                new Cell($user->email),
+                new Cell($user->phone_number),
+                new Cell($user->introducer ? $user->introducer->name : '--'),
+                new Cell($user->email_verified_at),
+                new Cell($user->last_login_at)
+            ))->viewLink("resources/users/{$user->id}");
         })->toArray());
     }
 }
@@ -156,7 +149,7 @@ protected function cards()
 {
     return [
         ......
-        new \App\Nova\Cards\LatestOrders,
+        new \App\Nova\Cards\UnverifiedUsers
      ];
  }
 ```
