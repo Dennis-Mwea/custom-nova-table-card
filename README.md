@@ -103,7 +103,7 @@ public function cards()
 
 or:
 
-You can create your own class which will extend \Mako\CustomTableCard\CustomTableCard in Nova/Cards directory on example.
+You can create your own class which will extend \Dytechltd\CustomTableCard\CustomTableCard in Nova/Cards directory on example.
 
 In this separate class you are able to fetch data from models in nice clean way.
 
