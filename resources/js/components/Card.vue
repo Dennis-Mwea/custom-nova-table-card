@@ -9,9 +9,9 @@
 						<thead v-if="header.length">
 						<tr>
 							<th v-for="head in header" :id="head.id" :class="head.class">
-            <span class="cursor-pointer inline-flex items-center">
-              {{ head.data }}
-            </span>
+		            <span class="cursor-pointer inline-flex items-center">
+		              {{ head.data }}
+		            </span>
 							</th>
 							<th></th>
 						</tr>
@@ -20,14 +20,13 @@
 						<tbody v-if="rows !== undefined && rows.length">
 						<tr v-for="row in rows">
 							<td v-for="column in row.columns" :id="column.id" :class="column.class" v-html="column.data"></td>
-							<td class="td-fit text-right pr-6">
+							<td v-if="hasViewColumn" class="td-fit text-right pr-6">
 		            <span v-if="row.view || row.viewLink">
-		              <router-link
-				              :title="__('View')"
-				              :to="row.viewLink"
-				              class="cursor-pointer text-70 hover:text-primary mr-3">
-		                <icon height="18" type="view" view-box="0 0 22 16" width="22"/>
-		              </router-link>
+		              <router-link :title="__('View')"
+		                           :to="viewLink(row)"
+		                           class="cursor-pointer text-70 hover:text-primary mr-3">
+                    <icon height="18" type="view" view-box="0 0 22 16" width="22"/>
+			            </router-link>
 		            </span>
 							</td>
 						</tr>
@@ -68,11 +67,11 @@
 					                  :previous="hasPreviousPage"
 					                  :resource-count-label="resourceCountLabel"
 					                  @page="selectPage">
-							<span v-if="resourceCountLabel"
-							      :class="{ 'ml-auto': paginationComponent === 'pagination-links'}"
-							      class="text-sm text-80 px-4">
-		            {{ resourceCountLabel }}
-		          </span>
+												<span v-if="resourceCountLabel"
+												      :class="{ 'ml-auto': paginationComponent === 'pagination-links'}"
+												      class="text-sm text-80 px-4">
+							            {{ resourceCountLabel }}
+							          </span>
 					</pagination-links>
 				</div>
 			</div>
@@ -94,7 +93,7 @@ export default {
 	],
 
 	computed: {
-		resourceCountLabel() {
+		resourceCountLabel: function () {
 			const first = this.perPage * (this.currentPage - 1)
 
 			return (
@@ -109,19 +108,19 @@ export default {
 			return this.perPage
 		},
 
-		totalPages() {
+		totalPages: function () {
 			return Math.ceil(this.allMatchingResourceCount / this.currentPerPage)
 		},
 
-		hasNextPage() {
+		hasNextPage: function () {
 			return Boolean(this.paginator && this.paginator.next_page_url)
 		},
 
-		hasPreviousPage() {
+		hasPreviousPage: function () {
 			return Boolean(this.paginator && this.paginator.prev_page_url)
 		},
 
-		paginationComponent() {
+		paginationComponent: function () {
 			return `pagination-${Nova.config['pagination'] || 'links'}`
 		},
 
@@ -129,6 +128,10 @@ export default {
 			return (
 					this.paginator.data.length > 0
 			)
+		},
+
+		hasViewColumn() {
+			return this.rows.find((row) => row.view || row.viewLink)
 		},
 	},
 
@@ -147,8 +150,9 @@ export default {
 	},
 
 	created: function () {
-		const {header, rows, title, refresh, uuid, paginator, config} = this.card
+		const {header, rows, title, paginator, config} = this.card
 
+		console.log(this.card)
 		this.rows = rows
 		this.header = header
 		this.title = title
@@ -159,21 +163,6 @@ export default {
 			this.perPage = paginator.per_page
 			this.allMatchingResourceCount = paginator.total
 		}
-
-		if (refresh) {
-			setInterval(function () {
-				Nova.request().get('/nova-api/cards')
-						.then(({data}) => {
-							const card = data.find((value) => value.uuid === uuid)
-
-							this.rows = card.rows
-						})
-			}, refresh * 1000)
-		}
-	},
-
-	mounted: function () {
-
 	},
 
 	methods: {
@@ -199,6 +188,10 @@ export default {
 			}).catch(error => {
 				console.error(error)
 			})
+		},
+
+		viewLink: function (row) {
+			return row.viewLink ? row.viewLink : row.view
 		}
 	}
 }

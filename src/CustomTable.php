@@ -54,11 +54,6 @@ class CustomTable extends Card
 		return $this->withMeta(['title' => $title]);
 	}
 
-	public function refresh(int $seconds)
-	{
-		return $this->withMeta(['refresh' => $seconds, 'uuid' => self::$instanceCount]);
-	}
-
 	public function paginator(LengthAwarePaginator $paginator)
 	{
 		return $this->withMeta([
