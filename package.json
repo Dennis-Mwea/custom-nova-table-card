@@ -11,7 +11,9 @@
     },
     "devDependencies": {
         "cross-env": "^5.0.0",
-        "laravel-mix": "^1.0"
+        "eslint": "^7.13.0",
+        "laravel-mix": "^1.0",
+        "laravel-nova": "^1.7.0"
     },
     "dependencies": {
         "vue": "^2.5.0"

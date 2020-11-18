@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Card API Routes
@@ -14,6 +11,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/endpoint', function (Request $request) {
-//     //
-// });
+use Illuminate\Support\Facades\Route;
+
+foreach (config('custom-table.apis') as $key => $value) {
+	foreach ($value['routes'] as $routeKey => $routeParams) {
+		Route::get($routeParams['url'], $routeParams['action']);
+	}
+}

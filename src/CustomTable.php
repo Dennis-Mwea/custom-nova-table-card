@@ -2,73 +2,89 @@
 
 namespace Dytechltd\CustomTable;
 
+use Illuminate\Pagination\LengthAwarePaginator;
 use Laravel\Nova\Card;
 
 class CustomTable extends Card
 {
-    public static $instanceCount = 0;
+	public static $instanceCount = 0;
 
-    /**
-     * The width of the card (1/3, 1/2, or full).
-     *
-     * @var string
-     */
-    public $width = 'full';
+	/**
+	 * The width of the card (1/3, 1/2, or full).
+	 *
+	 * @var string
+	 */
+	public $width = 'full';
 
-    public function __construct(array $header = [], array $data = [], string $title = '')
-    {
-        parent::__construct();
+	public function __construct(array $header = [], array $data = [], string $title = '')
+	{
+		parent::__construct();
 
-        self::$instanceCount++;
+		self::$instanceCount++;
 
-        $this->withMeta([
-            'header' => $this->_convertToArray($header),
-            'rows'      =>  $this->_convertToArray($data),
-            'title'     =>  $title,
-        ]);
-    }
+		$this->withMeta([
+			'header' => $this->_convertToArray($header),
+			'rows' => $this->_convertToArray($data),
+			'title' => $title,
+		]);
+	}
 
-    public function header(array $header)
-    {
-        return $this->withMeta([
-            'header' => $this->_convertToArray($header)
-        ]);
-    }
+	private function _convertToArray(array $data): array
+	{
+		return collect($data)
+			->map(function ($value) {
+				return $value->toArray();
+			})->toArray();
+	}
 
-    public function data(array $data)
-    {
-        return $this->withMeta(['rows' => $this->_convertToArray($data)]);
-    }
+	public function header(array $header)
+	{
+		return $this->withMeta([
+			'header' => $this->_convertToArray($header)
+		]);
+	}
 
-    public function title(string $title)
-    {
-        return $this->withMeta(['title' => $title]);
-    }
+	public function data(array $data)
+	{
+		return $this->withMeta(['rows' => $this->_convertToArray($data)]);
+	}
 
-    private function _convertToArray(array $data) : array
-    {
-        return collect($data)
-            ->map(function ($value) {
-                return $value->toArray();
-            })->toArray();
-    }
+	public function title(string $title)
+	{
+		return $this->withMeta(['title' => $title]);
+	}
 
-    public function refresh(int $seconds)
-    {
-        return $this->withMeta(['refresh' => $seconds, 'uuid' => self::$instanceCount]);
-    }
+	public function refresh(int $seconds)
+	{
+		return $this->withMeta(['refresh' => $seconds, 'uuid' => self::$instanceCount]);
+	}
 
-    function __destruct() {
-        self::$instanceCount--;
-    }
+	public function paginator(LengthAwarePaginator $paginator)
+	{
+		return $this->withMeta([
+			'paginator' => $paginator,
+		]);
+	}
 
-    /**
-     * Get the component name for the element.
-     *
-     * @return string
-     */
-    public function component()
-    {
-        return 'custom-table';
-    }
+	public function configValues(array $config = [])
+	{
+		return $this->withMeta([
+			'config' => $config,
+		]);
+	}
+
+	function __destruct()
+	{
+		self::$instanceCount--;
+	}
+
+	/**
+	 * Get the component name for the element.
+	 *
+	 * @return string
+	 */
+	public function component()
+	{
+		return 'custom-table';
+	}
 }
