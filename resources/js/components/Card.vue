@@ -152,7 +152,6 @@ export default {
 	created: function () {
 		const {header, rows, title, paginator, config} = this.card
 
-		console.log(this.card)
 		this.rows = rows
 		this.header = header
 		this.title = title
